@@ -4,7 +4,6 @@ import com.gykim22.DigitalDetox.Timer.domain.repository.TimerRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -53,7 +52,7 @@ class TimerRepositoryImpl @Inject constructor() : TimerRepository {
         timerJob = timerScope.launch {
             while (true) {
                 /* Compose에서 delay가 없다면 UI는 event를 잔뜩 받고 성능이 저하됨. 따라서, 적절한 딜레이로 정확도와 성능 개선 */
-                delay(100)
+                delay(30)
 
                 val currentTimeMillis = System.currentTimeMillis()
                 val elapsedTimeMillis = currentTimeMillis - startTimeMillis + accumulatedTimeMillis
