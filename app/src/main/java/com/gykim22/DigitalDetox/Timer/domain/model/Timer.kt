@@ -5,7 +5,7 @@ package com.gykim22.DigitalDetox.Timer.domain.model
  * @author Kim Giyun
  */
 data class Timer(
-    val status: TimerStatus,
+    val status: TimerStatus = TimerStatus.STOPPED,
     val timerSecond: Long = 0L
 )
 
