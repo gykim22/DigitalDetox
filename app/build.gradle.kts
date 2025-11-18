@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.gykim22.DigitalDetox"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.gykim22.DigitalDetox"
@@ -68,5 +68,6 @@ dependencies {
 
     /* Dagger Hilt */
     implementation("com.google.dagger:hilt-android:2.57.1")
+    implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
     ksp("com.google.dagger:hilt-android-compiler:2.57.1")
 }
