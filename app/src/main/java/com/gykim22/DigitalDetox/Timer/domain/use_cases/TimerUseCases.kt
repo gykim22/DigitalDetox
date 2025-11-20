@@ -1,6 +1,8 @@
 package com.gykim22.DigitalDetox.Timer.domain.use_cases
 
 import com.gykim22.DigitalDetox.Timer.domain.repository.TimerRepository
+import com.gykim22.DigitalDetox.di.PrimaryTimer
+import com.gykim22.DigitalDetox.di.SubTimer
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -9,21 +11,12 @@ import javax.inject.Inject
  * @author Kim Giyun
  */
 class TimerUseCases @Inject constructor(
-    private val timerRepository: TimerRepository
+    @PrimaryTimer private val primaryTimerRepository: TimerRepository,
+    @SubTimer private val subTimerRepository: TimerRepository
 ) {
-    operator fun invoke(): Flow<Long> {
-        return timerRepository.getTimerMillsUpdate()
-    }
+    fun primaryFlow(): Flow<Long> =
+        primaryTimerRepository.getTimerMillsUpdate()
 
-    fun startTimer() {
-        timerRepository.startTimer()
-    }
-
-    fun pauseTimer() {
-        timerRepository.pauseTimer()
-    }
-
-    fun stopTimer() {
-        timerRepository.stopTimer()
-    }
+    fun subFlow(): Flow<Long> =
+        subTimerRepository.getTimerMillsUpdate()
 }

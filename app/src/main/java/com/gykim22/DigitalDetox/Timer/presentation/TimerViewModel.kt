@@ -1,56 +1,157 @@
 package com.gykim22.DigitalDetox.Timer.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gykim22.DigitalDetox.Timer.domain.model.Timer
 import com.gykim22.DigitalDetox.Timer.domain.model.TimerStatus
 import com.gykim22.DigitalDetox.Timer.domain.repository.TimerRepository
 import com.gykim22.DigitalDetox.Timer.domain.use_cases.TimerUseCases
+import com.gykim22.DigitalDetox.di.PrimaryTimer
+import com.gykim22.DigitalDetox.di.SubTimer
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.concurrent.timer
 
+/**
+ * 주 타이머와, 보조 타이머를 정의합니다.
+ * @property primaryTimer 주 타이머 객체
+ * @property subTimer 보조 타이머 객체
+ * @author Kim Giyun
+ */
+data class TimerList(
+    val primaryTimer: Timer,
+    val subTimer: Timer,
+)
+
+/**
+ * 타이머 뷰모델입니다.
+ * @property timerState 타이머 상태
+ * @property timerUseCases 타이머 유스케이스
+ * @property repository 타이머 레포지토리
+ * @author Kim Giyun
+ */
 @HiltViewModel
 class TimerViewModel @Inject constructor(
     private val timerUseCases: TimerUseCases,
-    private val repository: TimerRepository
+    @PrimaryTimer private val primaryTimerRepository: TimerRepository,
+    @SubTimer private val subTimerRepository: TimerRepository
 ) : ViewModel() {
-    private val _timerState = MutableStateFlow(Timer())
-    val timerState: StateFlow<Timer> = _timerState.asStateFlow()
+    private val _timerState = MutableStateFlow(TimerList(
+        primaryTimer = Timer(
+            timerSecond = 0,
+            status = TimerStatus.STOPPED
+        ),
+        subTimer = Timer(
+            timerSecond = 0,
+            status = TimerStatus.STOPPED
+        )
+    ))
+    val timerState: StateFlow<TimerList> = _timerState.asStateFlow()
 
     init {
-        collectTimerState()
+        collectPrimaryTimerState()
+        collectSubTimerState()
     }
 
-    private fun collectTimerState() {
+    /**
+     * Primary Timer 시간 변경 Flow 수집
+     */
+    private fun collectPrimaryTimerState() {
         viewModelScope.launch {
-            timerUseCases().collect { mills ->
+            timerUseCases.primaryFlow().collect { mills ->
                 _timerState.value = _timerState.value.copy(
-                    timerSecond = mills
+                    primaryTimer = _timerState.value.primaryTimer.copy(
+                        timerSecond = mills
+                    )
                 )
+                Log.d("TimerRepo", "primary tick: $mills")
             }
         }
     }
 
-    fun startPauseTimer(){
-        when (_timerState.value.status) {
-            TimerStatus.RUNNING -> {
-                repository.pauseTimer()
-                _timerState.value = _timerState.value.copy(status = TimerStatus.PAUSED)
+    /**
+     * Sub Timer 시간 변경 Flow 수집
+     */
+    private fun collectSubTimerState() {
+        viewModelScope.launch {
+            timerUseCases.subFlow().collect { mills ->
+                _timerState.value = _timerState.value.copy(
+                    subTimer = _timerState.value.subTimer.copy(
+                        timerSecond = mills
+                    )
+                )
+                Log.d("TimerRepo", "sub tick: $mills")
 
+            }
+        }
+    }
+
+    /**
+     * 전체 Timer의 시작과 일시정지를 제어하는 함수입니다.
+     */
+    fun startPauseTimer() {
+        when (_timerState.value.primaryTimer.status) {
+            TimerStatus.RUNNING -> {
+                pausePrimaryTimer()
+                startSubTimer()
             }
             TimerStatus.PAUSED, TimerStatus.STOPPED -> {
-                repository.startTimer()
-                _timerState.value = _timerState.value.copy(status = TimerStatus.RUNNING)
+                startPrimaryTimer()
+                pauseSubTimer()
             }
         }
     }
 
-    fun stopTimer(){
-        repository.stopTimer()
-        _timerState.value = _timerState.value.copy(status = TimerStatus.STOPPED)
+    /**
+     * 전체 Timer를 종료하는 함수입니다.
+     */
+    fun stopTimer() {
+        primaryTimerRepository.stopTimer()
+        subTimerRepository.stopTimer()
+        _timerState.value = _timerState.value.copy(
+            primaryTimer = _timerState.value.primaryTimer.copy(status = TimerStatus.STOPPED),
+            subTimer = _timerState.value.subTimer.copy(status = TimerStatus.STOPPED)
+        )
+    }
+
+    /**
+     * 헬퍼 함수
+     */
+    private fun startPrimaryTimer() {
+        primaryTimerRepository.startTimer()
+        updatePrimaryStatus(TimerStatus.RUNNING)
+    }
+
+    private fun pausePrimaryTimer() {
+        primaryTimerRepository.pauseTimer()
+        updatePrimaryStatus(TimerStatus.PAUSED)
+    }
+
+    private fun startSubTimer() {
+        subTimerRepository.startTimer()
+        updateSubStatus(TimerStatus.RUNNING)
+    }
+
+    private fun pauseSubTimer() {
+        subTimerRepository.pauseTimer()
+        updateSubStatus(TimerStatus.PAUSED)
+    }
+
+    private fun updatePrimaryStatus(status: TimerStatus) {
+        _timerState.value = _timerState.value.copy(
+            primaryTimer = _timerState.value.primaryTimer.copy(status = status)
+        )
+    }
+
+    private fun updateSubStatus(status: TimerStatus) {
+        _timerState.value = _timerState.value.copy(
+            subTimer = _timerState.value.subTimer.copy(status = status)
+        )
     }
 }
