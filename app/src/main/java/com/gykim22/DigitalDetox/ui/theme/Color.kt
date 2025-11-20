@@ -2,6 +2,8 @@ package com.gykim22.DigitalDetox.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+val red100 = Color(0xFFEF524F)
+val blue100 = Color(0xFF397CDB)
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)
