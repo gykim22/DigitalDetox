@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -23,6 +24,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.gykim22.DigitalDetox.Timer.domain.model.Timer
 import com.gykim22.DigitalDetox.Timer.domain.model.TimerStatus
 import com.gykim22.DigitalDetox.Timer.presentation.util.CustomButton
@@ -116,11 +120,34 @@ fun TimerScreenPreview() {
 
 /**
  * TimerScreen에서 바로 TimerViewModel을 주입하지 않아 테스트 용이성을 확보했습니다.
+ * @author Kim Giyun
  */
 @Composable
 fun TimerScreenRoot() {
     val viewModel = hiltViewModel<TimerViewModel>()
     val state by viewModel.timerState.collectAsState()
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    /**
+     * 앱의 백그라운드, 포어그라운드 진입을 감지하여 타이머 동작을 제어하는 로직입니다.
+     * 백그라운드 진입 -> PrimaryTimer 일시정지 / SubTimer 작동
+     * 포어그라운드 진입 -> PrimaryTimer 작동 / SubTimer 일시 정지
+     */
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_PAUSE -> viewModel.onApplicationBackgroundTimer()
+                Lifecycle.Event.ON_RESUME -> viewModel.onApplicationForegroundTimer()
+                else -> {}
+            }
+        }
+
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
     TimerScreen(
         primaryTimerState = state.primaryTimer,
         subTimerState = state.subTimer,
