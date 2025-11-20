@@ -121,6 +121,33 @@ class TimerViewModel @Inject constructor(
     }
 
     /**
+     * 앱이 백그라운드에 진입할 시 타이머를 제어하는 함수입니다.
+     */
+    fun onApplicationBackgroundTimer() {
+        when(_timerState.value.primaryTimer.status) {
+            TimerStatus.RUNNING -> {
+                startSubTimer()
+                pausePrimaryTimer()
+            }
+
+            TimerStatus.PAUSED, TimerStatus.STOPPED -> {}
+        }
+    }
+
+    /**
+     * 앱이 포어그라운드에 진입할 시 타이머를 제어하는 함수입니다.
+     */
+    fun onApplicationForegroundTimer() {
+        when(_timerState.value.primaryTimer.status) {
+            TimerStatus.PAUSED -> {
+                pauseSubTimer()
+                startPrimaryTimer()
+            }
+            TimerStatus.RUNNING, TimerStatus.STOPPED -> { }
+        }
+    }
+
+    /**
      * 헬퍼 함수
      */
     private fun startPrimaryTimer() {
