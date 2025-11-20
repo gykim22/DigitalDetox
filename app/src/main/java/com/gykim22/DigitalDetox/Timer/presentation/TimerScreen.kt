@@ -26,19 +26,24 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.gykim22.DigitalDetox.Timer.domain.model.Timer
 import com.gykim22.DigitalDetox.Timer.domain.model.TimerStatus
 import com.gykim22.DigitalDetox.Timer.presentation.util.CustomButton
+import com.gykim22.DigitalDetox.Timer.presentation.util.HeightSpacer
+import com.gykim22.DigitalDetox.Timer.presentation.util.adder
 import com.gykim22.DigitalDetox.ui.theme.pretendard
+import com.gykim22.DigitalDetox.ui.theme.red100
 import java.util.concurrent.TimeUnit
 
 @Composable
 fun TimerScreen(
-    state: Timer,
+    primaryTimerState: Timer,
+    subTimerState: Timer,
     onStartPause: () -> Unit,
     onStop: () -> Unit
 ) {
-    val formattedTime = formatTime(state.timerSecond)
+    val formattedPrimaryTime = formatTime(primaryTimerState.timerSecond)
+    val formattedSubTime = formatTime(subTimerState.timerSecond)
 
     /* 18시간 도달 시 자동 종료 */
-    if (formattedTime == "18:00:00") onStop()
+    if (adder(formattedPrimaryTime, formattedSubTime)) onStop()
 
     Column(
         modifier = Modifier
@@ -49,11 +54,20 @@ fun TimerScreen(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = formattedTime,
+            text = formattedPrimaryTime,
             color = Color.White,
             fontFamily = pretendard,
             fontWeight = FontWeight.Bold,
             fontSize = 70.sp,
+            modifier = Modifier.padding(bottom = 24.dp)
+        )
+
+        Text(
+            text = formattedSubTime,
+            color = Color.White,
+            fontFamily = pretendard,
+            fontWeight = FontWeight.Bold,
+            fontSize = 40.sp,
             modifier = Modifier.padding(bottom = 32.dp)
         )
 
@@ -63,9 +77,9 @@ fun TimerScreen(
         ) {
             CustomButton(
                 onClick = { onStartPause() },
-                enabled = state.status != TimerStatus.RUNNING || state.timerSecond > 0L,
+                enabled = primaryTimerState.status != TimerStatus.RUNNING || primaryTimerState.timerSecond > 0L,
                 mModifier = Modifier.weight(1f),
-                text = when (state.status) {
+                text = when (primaryTimerState.status) {
                     TimerStatus.STOPPED -> "시작"
                     TimerStatus.RUNNING -> "일시정지"
                     TimerStatus.PAUSED -> "재개"
@@ -73,9 +87,9 @@ fun TimerScreen(
             )
 
             CustomButton(
-                onClick = { onStartPause() },
-                buttonColor = Color(0xFFEF524F),
-                enabled = state.status != TimerStatus.STOPPED,
+                onClick = { onStop() },
+                buttonColor = red100,
+                enabled = primaryTimerState.status != TimerStatus.STOPPED,
                 mModifier = Modifier.weight(1f),
                 text = "종료"
             )
@@ -87,7 +101,11 @@ fun TimerScreen(
 @Composable
 fun TimerScreenPreview() {
     TimerScreen(
-        state = Timer(
+        primaryTimerState = Timer(
+            timerSecond = 2000L,
+            status = TimerStatus.RUNNING,
+        ),
+        subTimerState = Timer(
             timerSecond = 1000L,
             status = TimerStatus.RUNNING,
         ),
@@ -104,7 +122,8 @@ fun TimerScreenRoot() {
     val viewModel = hiltViewModel<TimerViewModel>()
     val state by viewModel.timerState.collectAsState()
     TimerScreen(
-        state = state,
+        primaryTimerState = state.primaryTimer,
+        subTimerState = state.subTimer,
         onStartPause = { viewModel.startPauseTimer() },
         onStop = { viewModel.stopTimer() }
     )
