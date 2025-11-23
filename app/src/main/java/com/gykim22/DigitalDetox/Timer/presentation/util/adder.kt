@@ -1,5 +1,9 @@
 package com.gykim22.DigitalDetox.Timer.presentation.util
 
+import android.util.Log.i
+import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.hours
+
 /**
  * 공부시간과 휴식시간을 합쳐 18시간 이상인 지 체크하는 함수입니다.
  * @author Kim Giyun
@@ -39,5 +43,21 @@ fun parseToSecond(formattedString: String): Int {
             str[0].toInt() * 3600 + str[1].toInt() * 60 + str[2].toInt()
         }
         else -> throw IllegalArgumentException("잘못된 양식입니다.")
+    }
+}
+
+/**
+ * 초단위를 시분초로 변환하는 함수입니다.
+ * @author Kim Giyun
+ */
+fun parseToHMS(rawTime: Long): String {
+    val hour = TimeUnit.SECONDS.toHours(rawTime)
+    val minute = TimeUnit.SECONDS.toMinutes(rawTime) - TimeUnit.SECONDS.toHours(rawTime) * 60
+    val second = TimeUnit.SECONDS.toSeconds(rawTime) - TimeUnit.SECONDS.toMinutes(rawTime) * 60
+
+    return when {
+        hour > 0 -> String.format("%02d시간 %02d분 %02d초", hour, minute, second)
+        minute > 0 -> String.format("%02d분 %02d초", minute, second)
+        else -> String.format("%02d초", second)
     }
 }
