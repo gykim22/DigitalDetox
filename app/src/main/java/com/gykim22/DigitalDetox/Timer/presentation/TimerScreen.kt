@@ -15,7 +15,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,13 +23,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
-import com.gykim22.DigitalDetox.Core.HandleBackPressToExitApp
-import com.gykim22.DigitalDetox.Core.Screen
+import com.gykim22.DigitalDetox.Core.utils.HandleBackPressToExitApp
 import com.gykim22.DigitalDetox.Timer.domain.model.Timer
 import com.gykim22.DigitalDetox.Timer.domain.model.TimerStatus
 import com.gykim22.DigitalDetox.Timer.presentation.util.CustomButton
 import com.gykim22.DigitalDetox.Timer.presentation.util.adder
-import com.gykim22.DigitalDetox.Timer.presentation.util.noRippleClickable
 import com.gykim22.DigitalDetox.ui.theme.pretendard
 import com.gykim22.DigitalDetox.ui.theme.red100
 import java.util.concurrent.TimeUnit
@@ -40,8 +37,7 @@ fun TimerScreen(
     primaryTimerState: Timer,
     subTimerState: Timer,
     onStartPause: () -> Unit,
-    onStop: () -> Unit,
-    navController: NavController
+    onStop: () -> Unit
 ) {
     val formattedPrimaryTime = formatTime(primaryTimerState.timerSecond)
     val formattedSubTime = formatTime(subTimerState.timerSecond)
@@ -50,18 +46,17 @@ fun TimerScreen(
     if (adder(formattedPrimaryTime, formattedSubTime)) onStop()
 
     HandleBackPressToExitApp()
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(Color.White)
             .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = formattedPrimaryTime,
-            color = Color.White,
+            color = Color.Black,
             fontFamily = pretendard,
             fontWeight = FontWeight.Bold,
             fontSize = 70.sp,
@@ -70,7 +65,7 @@ fun TimerScreen(
 
         Text(
             text = formattedSubTime,
-            color = Color.White,
+            color = Color.Black,
             fontFamily = pretendard,
             fontWeight = FontWeight.Bold,
             fontSize = 40.sp,
@@ -83,6 +78,7 @@ fun TimerScreen(
         ) {
             CustomButton(
                 onClick = { onStartPause() },
+                textColor = Color.White,
                 enabled = primaryTimerState.status != TimerStatus.RUNNING || primaryTimerState.timerSecond > 0L,
                 mModifier = Modifier.weight(1f),
                 text = when (primaryTimerState.status) {
@@ -91,18 +87,17 @@ fun TimerScreen(
                     TimerStatus.PAUSED -> "재개"
                 }
             )
-
-            CustomButton(
-                onClick = { onStop() },
-                buttonColor = red100,
-                enabled = primaryTimerState.status != TimerStatus.STOPPED,
-                mModifier = Modifier.weight(1f),
-                text = "종료"
-            )
+            if (primaryTimerState.status != TimerStatus.STOPPED) {
+                CustomButton(
+                    onClick = { onStop() },
+                    buttonColor = red100,
+                    textColor = Color.White,
+                    enabled = true,
+                    mModifier = Modifier.weight(1f),
+                    text = "종료"
+                )
+            }
         }
-        Text("테스트", modifier = Modifier.noRippleClickable{
-            navController.navigate(Screen.NoteListScreen.route)
-        })
     }
 }
 
@@ -119,8 +114,7 @@ fun TimerScreenPreview() {
             status = TimerStatus.RUNNING,
         ),
         onStartPause = {},
-        onStop = {},
-        navController = NavController(LocalContext.current)
+        onStop = {}
     )
 }
 
@@ -170,13 +164,11 @@ fun TimerRoot(
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
-
     TimerScreen(
         primaryTimerState = state.primaryTimer,
         subTimerState = state.subTimer,
         onStartPause = { viewModel.startPauseTimer() },
-        onStop = { viewModel.stopTimer() },
-        navController = navController
+        onStop = { viewModel.stopTimer() }
     )
 }
 
