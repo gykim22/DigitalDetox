@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.gykim22.DigitalDetox.Core.HandleBackPressToExitApp
 import com.gykim22.DigitalDetox.Note.domain.model.Note
 import com.gykim22.DigitalDetox.Note.domain.util.NoteEvent
 import com.gykim22.DigitalDetox.Note.presentation.components.NoteItem
@@ -24,6 +25,7 @@ fun NoteListScreen(
     noteState: NoteState,
     onEvent: (NoteEvent) -> Unit
 ) {
+    HandleBackPressToExitApp()
     Column(
         modifier = Modifier
             .fillMaxSize()

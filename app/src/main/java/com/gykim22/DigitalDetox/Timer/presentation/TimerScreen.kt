@@ -24,6 +24,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
+import com.gykim22.DigitalDetox.Core.HandleBackPressToExitApp
 import com.gykim22.DigitalDetox.Core.Screen
 import com.gykim22.DigitalDetox.Timer.domain.model.Timer
 import com.gykim22.DigitalDetox.Timer.domain.model.TimerStatus
@@ -47,6 +48,8 @@ fun TimerScreen(
 
     /* 18시간 도달 시 자동 종료 */
     if (adder(formattedPrimaryTime, formattedSubTime)) onStop()
+
+    HandleBackPressToExitApp()
 
     Column(
         modifier = Modifier
