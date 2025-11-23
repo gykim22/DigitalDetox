@@ -17,9 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.gykim22.DigitalDetox.Core.Screen
 import com.gykim22.DigitalDetox.Note.domain.util.AddEditNoteEvent
 import com.gykim22.DigitalDetox.Note.presentation.components.HintTextField
 import com.gykim22.DigitalDetox.Timer.presentation.util.CustomButton
@@ -51,7 +50,7 @@ fun NoteEditScreen(
 
                 is NoteViewModel.UiEvent.SaveNote -> {
                     Toast.makeText(context, "저장되었습니다.", Toast.LENGTH_SHORT).show()
-                    navController.navigateUp()
+                    navController.navigate(Screen.NoteListScreen.route)
                 }
             }
         }
@@ -116,7 +115,8 @@ fun NoteEditScreen(
 
 @Composable
 fun NoteEditRoot(
-    viewModel: NoteViewModel
+    viewModel: NoteViewModel,
+    navController: NavController
 ) {
     val titleState = viewModel.noteTitle.value
     val contentState = viewModel.noteContent.value
@@ -127,7 +127,7 @@ fun NoteEditRoot(
             viewModel.onAddEditNoteEvent(it)
         },
         eventFlow = viewModel.addEditEventFlow,
-        navController = NavController(LocalContext.current)
+        navController = navController
     )
 }
 
