@@ -1,4 +1,4 @@
-package com.gykim22.DigitalDetox.Note.presentation.util
+package com.gykim22.DigitalDetox.Note.presentation.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
