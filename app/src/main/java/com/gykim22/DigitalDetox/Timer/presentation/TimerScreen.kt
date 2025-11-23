@@ -27,6 +27,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gykim22.DigitalDetox.Timer.domain.model.Timer
 import com.gykim22.DigitalDetox.Timer.domain.model.TimerStatus
 import com.gykim22.DigitalDetox.Timer.presentation.util.CustomButton
@@ -123,8 +124,9 @@ fun TimerScreenPreview() {
  * @author Kim Giyun
  */
 @Composable
-fun TimerScreenRoot() {
-    val viewModel = hiltViewModel<TimerViewModel>()
+fun TimerRoot(
+    viewModel: TimerViewModel
+) {
     val state by viewModel.timerState.collectAsState()
     val lifecycleOwner = LocalLifecycleOwner.current
 

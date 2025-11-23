@@ -8,7 +8,7 @@ import com.gykim22.DigitalDetox.Note.domain.model.Note
     entities = [Note::class],
     version = 1
 )
-abstract class NoteDataBase: RoomDatabase() {
+abstract class NoteDataBase : RoomDatabase() {
 
     abstract val noteDao: NoteDao
 }

@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.gykim22.DigitalDetox.Note.domain.model.Note
 import com.gykim22.DigitalDetox.Note.domain.util.NoteEvent
 import com.gykim22.DigitalDetox.Note.presentation.components.NoteItem
@@ -29,7 +28,7 @@ fun NoteListScreen(
             .fillMaxSize()
             .background(Color.White)
             .padding(16.dp)
-    ){
+    ) {
         NoteOrderSection(
             currentOrder = noteState.noteOrder,
             onOrderChange = {
@@ -40,8 +39,8 @@ fun NoteListScreen(
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(10.dp)
-        ){
-            items(noteState.notes){ note ->
+        ) {
+            items(noteState.notes) { note ->
                 NoteItem(
                     note = note,
                     onDeleteClick = {
@@ -57,8 +56,9 @@ fun NoteListScreen(
 }
 
 @Composable
-fun NoteListRoot(){
-    val viewModel = hiltViewModel<NoteViewModel>()
+fun NoteListRoot(
+    viewModel: NoteViewModel
+) {
     val state = viewModel.noteState.value
     NoteListScreen(
         noteState = state,
@@ -70,7 +70,7 @@ fun NoteListRoot(){
 
 @Preview
 @Composable
-fun NoteListScreenPreview(){
+fun NoteListScreenPreview() {
     NoteListScreen(
         noteState = NoteState(
             notes = listOf(
