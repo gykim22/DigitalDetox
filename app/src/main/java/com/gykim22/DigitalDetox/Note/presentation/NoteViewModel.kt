@@ -52,6 +52,10 @@ class NoteViewModel @Inject constructor(
             hint = "내용을 입력해주세요."
         )
     )
+
+    private var totalTime: Long = 0L
+    private var studyTime: Long = 0L
+    private var breakTime: Long = 0L
     val noteContent: State<NoteTextFieldState> = _noteContent
 
     private var _addEditEventFlow = MutableSharedFlow<UiEvent>()
@@ -88,14 +92,15 @@ class NoteViewModel @Inject constructor(
         }
     }
 
+    fun setTimes(total: Long, study: Long, rest: Long) {
+        totalTime = total
+        studyTime = study
+        breakTime = rest
+    }
+
     fun onNoteEvent(event: NoteEvent) {
         when (event) {
             is NoteEvent.Order -> {
-                if (noteState.value.noteOrder::class == event.noteOrder::class &&
-                    noteState.value.noteOrder.orderType == event.noteOrder.orderType
-                ) {
-                    return
-                }
                 job?.cancel()
                 job = noteUseCases.getAllNotes(event.noteOrder)
                     .onEach { notes ->
@@ -153,9 +158,9 @@ class NoteViewModel @Inject constructor(
                                 contents = noteContent.value.text,
                                 category = "공부",
                                 timestamp = System.currentTimeMillis(),
-                                total_time = 0,
-                                study_time = 0,
-                                break_time = 0,
+                                total_time = totalTime,
+                                study_time = studyTime,
+                                break_time = breakTime,
                                 id = currentNoteId
                             )
                         )
