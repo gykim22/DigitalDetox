@@ -3,6 +3,7 @@ package com.gykim22.DigitalDetox.Note.presentation
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -35,7 +36,7 @@ fun NoteListScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(16.dp)
+            .padding(vertical = 16.dp)
             .navigationBarsPadding()
             .statusBarsPadding()
     ) {
@@ -48,8 +49,10 @@ fun NoteListScreen(
         HeightSpacer(10.dp)
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            contentPadding = PaddingValues(bottom = 80.dp)
         ) {
             items(noteState.notes) { note ->
                 NoteItem(
