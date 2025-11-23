@@ -1,13 +1,20 @@
 package com.gykim22.DigitalDetox.Core
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.gykim22.DigitalDetox.Core.utils.BottomBar
+import com.gykim22.DigitalDetox.Core.utils.BottomTab
 import com.gykim22.DigitalDetox.Note.presentation.NoteEditRoot
 import com.gykim22.DigitalDetox.Note.presentation.NoteListRoot
 import com.gykim22.DigitalDetox.Note.presentation.NoteViewModel
@@ -15,10 +22,63 @@ import com.gykim22.DigitalDetox.Timer.presentation.TimerRoot
 import com.gykim22.DigitalDetox.Timer.presentation.TimerViewModel
 
 @Composable
-fun NavGraph(
-    startDestination: String
-) {
+fun MainGraph() {
     val navController = rememberNavController()
+    val currentRoute = navController.currentBackStackEntryFlow
+        .collectAsState(initial = navController.currentBackStackEntry)
+        .value?.destination?.route
+
+    val shouldShowBottomBar = when {
+        currentRoute == Screen.NoteEditScreen.route -> false
+        currentRoute?.startsWith("add_edit_note") == true -> false
+        else -> true
+    }
+
+    val selectedTab = when (currentRoute) {
+        Screen.TimerScreen.route -> BottomTab.Home
+        Screen.NoteListScreen.route -> BottomTab.Calendar
+        else -> BottomTab.Home
+    }
+
+    Scaffold(
+        bottomBar = {
+            if (shouldShowBottomBar) {
+                BottomBar(
+                    selectedTab = selectedTab,
+                    onTabSelected = { tab ->
+                        when (tab) {
+                            BottomTab.Home -> {
+                                navController.navigate(Screen.TimerScreen.route) {
+                                    popUpTo(Screen.TimerScreen.route) { inclusive = false }
+                                    launchSingleTop = true
+                                }
+                            }
+
+                            BottomTab.Calendar -> {
+                                navController.navigate(Screen.NoteListScreen.route) {
+                                    popUpTo(Screen.NoteListScreen.route) { inclusive = false }
+                                    launchSingleTop = true
+                                }
+                            }
+                        }
+                    }
+                )
+            }
+        }
+    ) {
+        NavGraph(
+            startDestination = Screen.TimerScreen.route,
+            navController = navController
+        )
+    }
+}
+
+@Composable
+fun NavGraph(
+    startDestination: String,
+    navController: NavHostController,
+) {
+    val navController = navController
     val timerViewModel = hiltViewModel<TimerViewModel>()
     val noteViewModel = hiltViewModel<NoteViewModel>()
 
