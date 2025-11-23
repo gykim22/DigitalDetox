@@ -68,10 +68,9 @@ fun NoteEditScreen(
 
                 is NoteViewModel.UiEvent.SaveNote -> {
                     Toast.makeText(context, "저장되었습니다.", Toast.LENGTH_SHORT).show()
+                    navController.popBackStack()
                     navController.navigate(Screen.NoteListScreen.route) {
-                        popUpTo(Screen.NoteListScreen.route) {
-                            inclusive = true
-                        }
+                        launchSingleTop = true
                     }
                 }
             }
@@ -114,6 +113,8 @@ fun NoteEditScreen(
             confirmButton = {
                 TextButton(onClick = {
                     showExitDialog = false
+                    onEvent(AddEditNoteEvent.EnteredTitle(""))
+                    onEvent(AddEditNoteEvent.EnteredContent(""))
                     navController.popBackStack()
                 }) {
                     Text(
@@ -161,7 +162,8 @@ fun NoteEditScreen(
             textStyle = TextStyle(
                 fontFamily = pretendard,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 20.sp
+                fontSize = 20.sp,
+                color = if (isTitleHintVisible) Color.Gray else Color.Black
             )
         )
         HeightSpacer(10.dp)
@@ -181,7 +183,8 @@ fun NoteEditScreen(
             textStyle = TextStyle(
                 fontFamily = pretendard,
                 fontWeight = FontWeight.Medium,
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                color = if (isContentHintVisible) Color.Gray else Color.Black
             )
         )
         HeightSpacer(10.dp)
