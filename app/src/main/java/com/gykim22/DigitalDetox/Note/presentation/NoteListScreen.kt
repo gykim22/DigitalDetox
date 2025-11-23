@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -13,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.gykim22.DigitalDetox.Core.HandleBackPressToExitApp
+import com.gykim22.DigitalDetox.Core.utils.HandleBackPressToExitApp
 import com.gykim22.DigitalDetox.Note.domain.model.Note
 import com.gykim22.DigitalDetox.Note.domain.util.NoteEvent
 import com.gykim22.DigitalDetox.Note.presentation.components.NoteItem
@@ -31,6 +33,8 @@ fun NoteListScreen(
             .fillMaxSize()
             .background(Color.White)
             .padding(16.dp)
+            .navigationBarsPadding()
+            .statusBarsPadding()
     ) {
         NoteOrderSection(
             currentOrder = noteState.noteOrder,
