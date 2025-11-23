@@ -56,6 +56,8 @@ class NoteViewModel @Inject constructor(
     private var totalTime: Long = 0L
     private var studyTime: Long = 0L
     private var breakTime: Long = 0L
+    private var timestamp: Long = 0L
+
     val noteContent: State<NoteTextFieldState> = _noteContent
 
     private var _addEditEventFlow = MutableSharedFlow<UiEvent>()
@@ -157,7 +159,7 @@ class NoteViewModel @Inject constructor(
                                 title = noteTitle.value.text,
                                 contents = noteContent.value.text,
                                 category = "공부",
-                                timestamp = System.currentTimeMillis(),
+                                timestamp = currentNoteId?.let { timestamp } ?: System.currentTimeMillis(),
                                 total_time = totalTime,
                                 study_time = studyTime,
                                 break_time = breakTime,
@@ -165,6 +167,7 @@ class NoteViewModel @Inject constructor(
                             )
                         )
                         _addEditEventFlow.emit(UiEvent.SaveNote)
+                        resetNoteState()
                     } catch (e: Exception) {
                         _addEditEventFlow.emit(
                             UiEvent.ShowSnackbar(
@@ -177,5 +180,45 @@ class NoteViewModel @Inject constructor(
             }
 
         }
+    }
+
+    fun loadNoteById(noteId: Int) {
+        viewModelScope.launch {
+            val note = noteUseCases.getNote(noteId)
+            note?.let {
+                _noteTitle.value = noteTitle.value.copy(
+                    text = it.title,
+                    isHintVisible = false
+                )
+                _noteContent.value = noteContent.value.copy(
+                    text = it.contents,
+                    isHintVisible = false
+                )
+                totalTime = it.total_time
+                studyTime = it.study_time
+                breakTime = it.break_time
+                timestamp = it.timestamp
+                currentNoteId = it.id
+            }
+        }
+    }
+
+    fun resetNoteState() {
+        _noteTitle.value = NoteTextFieldState(
+            text = "",
+            hint = "제목을 입력해주세요.",
+            isHintVisible = true
+        )
+        _noteContent.value = NoteTextFieldState(
+            text = "",
+            hint = "내용을 입력해주세요.",
+            isHintVisible = true
+        )
+
+        totalTime = 0L
+        studyTime = 0L
+        breakTime = 0L
+        timestamp = 0L
+        currentNoteId = null
     }
 }

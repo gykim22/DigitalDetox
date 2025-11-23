@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Icon
@@ -26,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -54,6 +54,9 @@ fun NoteItem(
             .background(Color.White)
             .border(2.dp, blue100, shape = RoundedCornerShape(20.dp))
             .padding(horizontal = 24.dp, vertical = 16.dp)
+            .noRippleClickable {
+                onEditClick()
+            }
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -66,13 +69,8 @@ fun NoteItem(
                 fontFamily = pretendard,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 20.sp,
+                color = Color.Black,
                 maxLines = 1
-            )
-            Icon(
-                imageVector = Icons.Default.Create,
-                contentDescription = "수정",
-                modifier = Modifier.noRippleClickable(onClick = onEditClick),
-                tint = blue100
             )
 
             WidthSpacer(5.dp)
@@ -89,6 +87,7 @@ fun NoteItem(
             text = dateFormat(note.timestamp),
             modifier = Modifier,
             fontFamily = pretendard,
+            color = Color.Black,
             fontWeight = FontWeight.SemiBold,
             fontSize = 16.sp
         )
@@ -103,6 +102,7 @@ fun NoteItem(
                 modifier = Modifier,
                 fontFamily = pretendard,
                 fontWeight = FontWeight.SemiBold,
+                color = Color.Black,
                 fontSize = 16.sp,
             )
             Icon(
@@ -121,6 +121,7 @@ fun NoteItem(
                     text = "공부 시간 : ${parseToHMS(note.study_time)}",
                     fontFamily = pretendard,
                     fontSize = 10.sp,
+                    color = Color.Black,
                     fontWeight = FontWeight.Medium
                 )
                 HeightSpacer(4.dp)
@@ -128,6 +129,7 @@ fun NoteItem(
                     text = "휴식 시간 : ${parseToHMS(note.break_time)}",
                     fontFamily = pretendard,
                     fontSize = 10.sp,
+                    color = Color.Black,
                     fontWeight = FontWeight.Medium
                 )
             }
@@ -139,8 +141,11 @@ fun NoteItem(
             text = note.contents,
             modifier = Modifier,
             fontFamily = pretendard,
+            color = Color.Black,
             fontWeight = FontWeight.Medium,
-            fontSize = 16.sp
+            fontSize = 16.sp,
+            maxLines = 3,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }

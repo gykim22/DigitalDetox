@@ -12,9 +12,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gykim22.DigitalDetox.Note.domain.util.NoteOrder
 import com.gykim22.DigitalDetox.Note.domain.util.OrderType
+import com.gykim22.DigitalDetox.Timer.presentation.util.WidthSpacer
 
 @Composable
 fun NoteOrderSection(
+    sidePaddingValueInt : Int = 16,
     currentOrder: NoteOrder,
     onOrderChange: (NoteOrder) -> Unit
 ) {
@@ -25,6 +27,7 @@ fun NoteOrderSection(
         horizontalArrangement = Arrangement.spacedBy(5.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        WidthSpacer(sidePaddingValueInt.dp)
         SortChip(
             tagTitle = "제목",
             isSelected = currentOrder is NoteOrder.Title,
@@ -79,6 +82,7 @@ fun NoteOrderSection(
             },
             modifier = Modifier
         )
+        WidthSpacer(sidePaddingValueInt.dp)
     }
 }
 
