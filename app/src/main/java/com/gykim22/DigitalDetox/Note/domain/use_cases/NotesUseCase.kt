@@ -60,6 +60,14 @@ class AddNoteUseCase(
     private val repository: NoteRepository
 ) {
     suspend operator fun invoke(note: Note) {
+        if (note.title.isBlank()) {
+            throw Exception("제목을 한 글자 이상 입력해주세요.")
+        }
+
+        if (note.contents.isBlank()) {
+            throw Exception("내용을 한 글자 이상 입력해주세요.")
+        }
+
         repository.insertNote(note)
     }
 }
