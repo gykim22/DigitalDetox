@@ -139,6 +139,8 @@ fun NoteItem(
             text = note.contents,
             modifier = Modifier,
             fontFamily = pretendard,
+            fontWeight = FontWeight.Medium,
+            fontSize = 16.sp
         )
     }
 }
