@@ -13,8 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.gykim22.DigitalDetox.Core.utils.HandleBackPressToExitApp
 import com.gykim22.DigitalDetox.Note.domain.model.Note
 import com.gykim22.DigitalDetox.Note.domain.util.NoteEvent
@@ -25,7 +27,8 @@ import com.gykim22.DigitalDetox.Timer.presentation.util.HeightSpacer
 @Composable
 fun NoteListScreen(
     noteState: NoteState,
-    onEvent: (NoteEvent) -> Unit
+    onEvent: (NoteEvent) -> Unit,
+    navController: NavController
 ) {
     HandleBackPressToExitApp()
     Column(
@@ -44,7 +47,8 @@ fun NoteListScreen(
         )
         HeightSpacer(10.dp)
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             items(noteState.notes) { note ->
@@ -54,7 +58,7 @@ fun NoteListScreen(
                         onEvent(NoteEvent.DeleteNote(note))
                     },
                     onEditClick = {
-
+                        navController.navigate("add_edit_note?noteId=${note.id}")
                     }
                 )
             }
@@ -64,14 +68,16 @@ fun NoteListScreen(
 
 @Composable
 fun NoteListRoot(
-    viewModel: NoteViewModel
+    viewModel: NoteViewModel,
+    navController: NavController
 ) {
     val state by viewModel.noteState
     NoteListScreen(
         noteState = state,
         onEvent = {
             viewModel.onNoteEvent(it)
-        }
+        },
+        navController = navController
     )
 }
 
@@ -101,6 +107,7 @@ fun NoteListScreenPreview() {
                 )
             )
         ),
-        onEvent = {}
+        onEvent = {},
+        navController = NavController(LocalContext.current)
     )
 }
