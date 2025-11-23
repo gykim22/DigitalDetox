@@ -29,6 +29,7 @@ import com.gykim22.DigitalDetox.ui.theme.blue100
 @Composable
 fun SortChip(
     tagTitle: String,
+    isSelected: Boolean,
     selected: OrderType,
     onSelected: (OrderType) -> Unit,
     modifier: Modifier = Modifier
@@ -109,6 +110,7 @@ private fun SortDropdownPreview() {
     SortChip(
         tagTitle = "작성 일자",
         selected = order,
+        isSelected = true,
         onSelected = { order = it },
         modifier = Modifier.padding(16.dp)
     )
