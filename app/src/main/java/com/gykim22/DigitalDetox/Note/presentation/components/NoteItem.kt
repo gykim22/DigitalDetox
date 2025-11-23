@@ -1,5 +1,6 @@
 package com.gykim22.DigitalDetox.Note.presentation.components
 
+import android.R.attr.fontWeight
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -51,6 +53,7 @@ fun NoteItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .heightIn(max = 200.dp)
             .background(Color.White)
             .border(2.dp, blue100, shape = RoundedCornerShape(20.dp))
             .padding(horizontal = 24.dp, vertical = 16.dp)
@@ -66,6 +69,7 @@ fun NoteItem(
                 fontFamily = pretendard,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 20.sp,
+                color = Color.Black,
                 maxLines = 1
             )
             Icon(
@@ -89,6 +93,7 @@ fun NoteItem(
             text = dateFormat(note.timestamp),
             modifier = Modifier,
             fontFamily = pretendard,
+            color = Color.Black,
             fontWeight = FontWeight.SemiBold,
             fontSize = 16.sp
         )
@@ -103,6 +108,7 @@ fun NoteItem(
                 modifier = Modifier,
                 fontFamily = pretendard,
                 fontWeight = FontWeight.SemiBold,
+                color = Color.Black,
                 fontSize = 16.sp,
             )
             Icon(
@@ -121,6 +127,7 @@ fun NoteItem(
                     text = "공부 시간 : ${parseToHMS(note.study_time)}",
                     fontFamily = pretendard,
                     fontSize = 10.sp,
+                    color = Color.Black,
                     fontWeight = FontWeight.Medium
                 )
                 HeightSpacer(4.dp)
@@ -128,6 +135,7 @@ fun NoteItem(
                     text = "휴식 시간 : ${parseToHMS(note.break_time)}",
                     fontFamily = pretendard,
                     fontSize = 10.sp,
+                    color = Color.Black,
                     fontWeight = FontWeight.Medium
                 )
             }
@@ -139,6 +147,7 @@ fun NoteItem(
             text = note.contents,
             modifier = Modifier,
             fontFamily = pretendard,
+            color = Color.Black,
             fontWeight = FontWeight.Medium,
             fontSize = 16.sp
         )
