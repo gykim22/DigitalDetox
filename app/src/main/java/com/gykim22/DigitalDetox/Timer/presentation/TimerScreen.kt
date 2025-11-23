@@ -136,7 +136,8 @@ fun TimerRoot(
                 is TimerUiEvent.NavigateToAddNote -> {
                     navController.navigate(
                         "add_edit_note" +
-                                "?total=${event.total}" +
+                                "?noteId=-1" +
+                                "&total=${event.total}" +
                                 "&study=${event.study}" +
                                 "&rest=${event.rest}"
                     )
