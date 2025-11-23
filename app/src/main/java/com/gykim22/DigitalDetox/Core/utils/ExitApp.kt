@@ -1,4 +1,4 @@
-package com.gykim22.DigitalDetox.Core
+package com.gykim22.DigitalDetox.Core.utils
 
 import android.app.Activity
 import android.widget.Toast
@@ -9,7 +9,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavController
 
 @Composable
 fun HandleBackPressToExitApp() {
