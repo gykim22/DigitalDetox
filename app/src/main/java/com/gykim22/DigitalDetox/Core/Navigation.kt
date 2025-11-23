@@ -1,11 +1,9 @@
 package com.gykim22.DigitalDetox.Core
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -87,7 +85,7 @@ fun NavGraph(
         startDestination = startDestination
     ) {
         composable(Screen.NoteListScreen.route) {
-            NoteListRoot(noteViewModel)
+            NoteListRoot(noteViewModel, navController)
         }
         composable(Screen.TimerScreen.route) {
             TimerRoot(timerViewModel, navController)
@@ -96,19 +94,22 @@ fun NavGraph(
             NoteEditRoot(noteViewModel, navController)
         }
         composable(
-            route = "add_edit_note?total={total}&study={study}&rest={rest}",
+            route = "add_edit_note?noteId={noteId}&total={total}&study={study}&rest={rest}",
             arguments = listOf(
+                navArgument("noteId") { type = NavType.IntType; defaultValue = -1 },
                 navArgument("total") { type = NavType.LongType; defaultValue = 0L },
                 navArgument("study") { type = NavType.LongType; defaultValue = 0L },
                 navArgument("rest") { type = NavType.LongType; defaultValue = 0L },
             )
         ) { entry ->
+            val noteId = entry.arguments?.getInt("noteId") ?: -1
             val total = entry.arguments?.getLong("total") ?: 0L
             val study = entry.arguments?.getLong("study") ?: 0L
             val rest = entry.arguments?.getLong("rest") ?: 0L
 
-            LaunchedEffect(Unit) {
-                noteViewModel.setTimes(total, study, rest)
+            LaunchedEffect(noteId) {
+                if (noteId != -1) noteViewModel.loadNoteById(noteId)
+                else noteViewModel.setTimes(total, study, rest)
             }
 
             NoteEditRoot(noteViewModel, navController)
