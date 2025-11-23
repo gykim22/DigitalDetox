@@ -1,4 +1,4 @@
-package com.gykim22.DigitalDetox.Note.presentation
+package com.gykim22.DigitalDetox.Note.presentation.components
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -12,7 +12,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gykim22.DigitalDetox.Note.domain.util.NoteOrder
 import com.gykim22.DigitalDetox.Note.domain.util.OrderType
-import com.gykim22.DigitalDetox.Note.presentation.util.SortChip
 
 @Composable
 fun NoteOrderSection(
