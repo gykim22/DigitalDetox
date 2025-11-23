@@ -68,7 +68,11 @@ fun NoteEditScreen(
 
                 is NoteViewModel.UiEvent.SaveNote -> {
                     Toast.makeText(context, "저장되었습니다.", Toast.LENGTH_SHORT).show()
-                    navController.navigate(Screen.NoteListScreen.route)
+                    navController.navigate(Screen.NoteListScreen.route) {
+                        popUpTo(Screen.NoteListScreen.route) {
+                            inclusive = true
+                        }
+                    }
                 }
             }
         }
