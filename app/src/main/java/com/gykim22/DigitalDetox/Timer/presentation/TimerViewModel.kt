@@ -11,8 +11,10 @@ import com.gykim22.DigitalDetox.di.PrimaryTimer
 import com.gykim22.DigitalDetox.di.SubTimer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,6 +30,14 @@ data class TimerList(
     val primaryTimer: Timer,
     val subTimer: Timer,
 )
+
+sealed class TimerUiEvent {
+    data class NavigateToAddNote(
+        val total: Long,
+        val study: Long,
+        val rest: Long
+    ) : TimerUiEvent()
+}
 
 /**
  * 타이머 뷰모델입니다.
@@ -53,6 +63,13 @@ class TimerViewModel @Inject constructor(
         )
     ))
     val timerState: StateFlow<TimerList> = _timerState.asStateFlow()
+
+    private val _uiEvent = MutableSharedFlow<TimerUiEvent>()
+    val uiEvent = _uiEvent.asSharedFlow()
+
+    private suspend fun sendEvent(event: TimerUiEvent) {
+        _uiEvent.emit(event)
+    }
 
     init {
         collectPrimaryTimerState()
@@ -112,13 +129,29 @@ class TimerViewModel @Inject constructor(
      * 전체 Timer를 종료하는 함수입니다.
      */
     fun stopTimer() {
+        val primary = _timerState.value.primaryTimer.timerSecond
+        val sub = _timerState.value.subTimer.timerSecond
+        val total = primary + sub
+
         primaryTimerRepository.stopTimer()
         subTimerRepository.stopTimer()
+
         _timerState.value = _timerState.value.copy(
             primaryTimer = _timerState.value.primaryTimer.copy(status = TimerStatus.STOPPED),
             subTimer = _timerState.value.subTimer.copy(status = TimerStatus.STOPPED)
         )
+
+        viewModelScope.launch {
+            sendEvent(
+                TimerUiEvent.NavigateToAddNote(
+                    total = total,
+                    study = primary,
+                    rest = sub
+                )
+            )
+        }
     }
+
 
     /**
      * 앱이 백그라운드에 진입할 시 타이머를 제어하는 함수입니다.
