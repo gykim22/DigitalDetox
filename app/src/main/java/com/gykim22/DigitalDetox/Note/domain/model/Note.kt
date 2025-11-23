@@ -12,7 +12,7 @@ data class Note(
     val total_time: Long,
     val study_time: Long,
     val break_time: Long,
-    @PrimaryKey val id: Int? = null
+    @PrimaryKey(autoGenerate = true) val id: Int? = null
 ) {
     companion object {
         val categories = listOf("공부", "기타")

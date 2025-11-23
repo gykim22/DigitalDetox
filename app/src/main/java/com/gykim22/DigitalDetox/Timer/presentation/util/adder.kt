@@ -47,13 +47,15 @@ fun parseToSecond(formattedString: String): Int {
 }
 
 /**
- * 초단위를 시분초로 변환하는 함수입니다.
+ * 밀리초단위를 시분초로 변환하는 함수입니다.
  * @author Kim Giyun
  */
 fun parseToHMS(rawTime: Long): String {
-    val hour = TimeUnit.SECONDS.toHours(rawTime)
-    val minute = TimeUnit.SECONDS.toMinutes(rawTime) - TimeUnit.SECONDS.toHours(rawTime) * 60
-    val second = TimeUnit.SECONDS.toSeconds(rawTime) - TimeUnit.SECONDS.toMinutes(rawTime) * 60
+    val sec = TimeUnit.MILLISECONDS.toSeconds(rawTime)
+
+    val hour = TimeUnit.SECONDS.toHours(sec)
+    val minute = TimeUnit.SECONDS.toMinutes(sec) - TimeUnit.SECONDS.toHours(sec) * 60
+    val second = TimeUnit.SECONDS.toSeconds(sec) - TimeUnit.SECONDS.toMinutes(sec) * 60
 
     return when {
         hour > 0 -> String.format("%02d시간 %02d분 %02d초", hour, minute, second)

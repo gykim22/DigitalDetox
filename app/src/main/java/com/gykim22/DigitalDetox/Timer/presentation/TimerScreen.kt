@@ -1,38 +1,35 @@
 package com.gykim22.DigitalDetox.Timer.presentation
 
-import android.R.attr.bottom
-import android.R.attr.enabled
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.gykim22.DigitalDetox.Core.Screen
 import com.gykim22.DigitalDetox.Timer.domain.model.Timer
 import com.gykim22.DigitalDetox.Timer.domain.model.TimerStatus
 import com.gykim22.DigitalDetox.Timer.presentation.util.CustomButton
-import com.gykim22.DigitalDetox.Timer.presentation.util.HeightSpacer
 import com.gykim22.DigitalDetox.Timer.presentation.util.adder
+import com.gykim22.DigitalDetox.Timer.presentation.util.noRippleClickable
 import com.gykim22.DigitalDetox.ui.theme.pretendard
 import com.gykim22.DigitalDetox.ui.theme.red100
 import java.util.concurrent.TimeUnit
@@ -42,7 +39,8 @@ fun TimerScreen(
     primaryTimerState: Timer,
     subTimerState: Timer,
     onStartPause: () -> Unit,
-    onStop: () -> Unit
+    onStop: () -> Unit,
+    navController: NavController
 ) {
     val formattedPrimaryTime = formatTime(primaryTimerState.timerSecond)
     val formattedSubTime = formatTime(subTimerState.timerSecond)
@@ -99,6 +97,9 @@ fun TimerScreen(
                 text = "종료"
             )
         }
+        Text("테스트", modifier = Modifier.noRippleClickable{
+            navController.navigate(Screen.NoteListScreen.route)
+        })
     }
 }
 
@@ -115,7 +116,8 @@ fun TimerScreenPreview() {
             status = TimerStatus.RUNNING,
         ),
         onStartPause = {},
-        onStop = {}
+        onStop = {},
+        navController = NavController(LocalContext.current)
     )
 }
 
@@ -125,10 +127,26 @@ fun TimerScreenPreview() {
  */
 @Composable
 fun TimerRoot(
-    viewModel: TimerViewModel
+    viewModel: TimerViewModel,
+    navController: NavController
 ) {
     val state by viewModel.timerState.collectAsState()
     val lifecycleOwner = LocalLifecycleOwner.current
+
+    LaunchedEffect(true) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+                is TimerUiEvent.NavigateToAddNote -> {
+                    navController.navigate(
+                        "add_edit_note" +
+                                "?total=${event.total}" +
+                                "&study=${event.study}" +
+                                "&rest=${event.rest}"
+                    )
+                }
+            }
+        }
+    }
 
     /**
      * 앱의 백그라운드, 포어그라운드 진입을 감지하여 타이머 동작을 제어하는 로직입니다.
@@ -154,7 +172,8 @@ fun TimerRoot(
         primaryTimerState = state.primaryTimer,
         subTimerState = state.subTimer,
         onStartPause = { viewModel.startPauseTimer() },
-        onStop = { viewModel.stopTimer() }
+        onStop = { viewModel.stopTimer() },
+        navController = navController
     )
 }
 
