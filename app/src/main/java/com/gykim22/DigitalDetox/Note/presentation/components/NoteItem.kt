@@ -1,6 +1,5 @@
 package com.gykim22.DigitalDetox.Note.presentation.components
 
-import android.R.attr.fontWeight
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -9,11 +8,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Icon
@@ -28,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,10 +51,12 @@ fun NoteItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(max = 200.dp)
             .background(Color.White)
             .border(2.dp, blue100, shape = RoundedCornerShape(20.dp))
             .padding(horizontal = 24.dp, vertical = 16.dp)
+            .noRippleClickable {
+                onEditClick()
+            }
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -71,12 +71,6 @@ fun NoteItem(
                 fontSize = 20.sp,
                 color = Color.Black,
                 maxLines = 1
-            )
-            Icon(
-                imageVector = Icons.Default.Create,
-                contentDescription = "수정",
-                modifier = Modifier.noRippleClickable(onClick = onEditClick),
-                tint = blue100
             )
 
             WidthSpacer(5.dp)
@@ -149,7 +143,9 @@ fun NoteItem(
             fontFamily = pretendard,
             color = Color.Black,
             fontWeight = FontWeight.Medium,
-            fontSize = 16.sp
+            fontSize = 16.sp,
+            maxLines = 3,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }
