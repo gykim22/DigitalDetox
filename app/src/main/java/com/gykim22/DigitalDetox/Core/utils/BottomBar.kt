@@ -27,19 +27,32 @@ import com.gykim22.DigitalDetox.Timer.presentation.util.noRippleClickable
 import com.gykim22.DigitalDetox.ui.theme.gray300
 import com.gykim22.DigitalDetox.ui.theme.pretendard
 
+/**
+ * 바텀 네비게이션 바를 위한 enumClass입니다.
+ * @property label 탭의 라벨입니다.
+ * @property selectedIcon 선택된 탭의 아이콘입니다.
+ * @property unselectedIcon 선택되지 않은 탭의 아이콘입니다.
+ * @author Kim Giyun
+ */
 enum class BottomTab(
     val label: String,
     val selectedIcon: Int,
     val unselectedIcon: Int
 ) {
     Home("타이머", R.drawable.btn_blue_bottom_bar_home, R.drawable.btn_gray_bottom_bar_home),
-    Calendar(
+    Notes(
         "노트",
-        R.drawable.btn_blue_bottom_bar_calendar,
-        R.drawable.btn_gray_bottom_bar_calendar
+        R.drawable.btn_blue_bottom_bar_notes,
+        R.drawable.btn_gray_bottom_bar_notes
     ),
 }
 
+/**
+ * 바텀 네비게이션 바입니다.
+ * @param selectedTab 선택된 탭입니다.
+ * @param onTabSelected 탭을 선택했을 때 실행되는 콜백입니다.
+ * @author Kim Giyun
+ */
 @Composable
 fun BottomBar(
     selectedTab: BottomTab,
@@ -69,6 +82,14 @@ fun BottomBar(
     }
 }
 
+/**
+ * 바텀 네비게이션 바의 아이템입니다.
+ * @param tab 탭입니다.
+ * @param isSelected 선택된 탭인지 여부입니다.
+ * @param onClick 탭을 선택했을 때 실행되는 콜백입니다
+ * @param mModifier Custom을 위한 Modifier 호이스팅입니다.
+ * @author Kim Giyun
+ */
 @Composable
 fun BottomBarItem(
     tab: BottomTab,
