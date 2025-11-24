@@ -49,7 +49,7 @@ fun NoteItem(
     val rotation by animateFloatAsState(if (expanded) 180f else 0f)
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(Color.White)
             .border(2.dp, blue100, shape = RoundedCornerShape(20.dp))

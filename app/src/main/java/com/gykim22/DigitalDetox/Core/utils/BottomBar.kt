@@ -22,10 +22,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.gykim22.DigitalDetox.Timer.presentation.util.noRippleClickable
-import com.gykim22.DigitalDetox.ui.theme.pretendard
 import com.gykim22.DigitalDetox.R
+import com.gykim22.DigitalDetox.Timer.presentation.util.noRippleClickable
 import com.gykim22.DigitalDetox.ui.theme.gray300
+import com.gykim22.DigitalDetox.ui.theme.pretendard
 
 enum class BottomTab(
     val label: String,
@@ -33,7 +33,11 @@ enum class BottomTab(
     val unselectedIcon: Int
 ) {
     Home("타이머", R.drawable.btn_blue_bottom_bar_home, R.drawable.btn_gray_bottom_bar_home),
-    Calendar("노트", R.drawable.btn_blue_bottom_bar_calendar, R.drawable.btn_gray_bottom_bar_calendar),
+    Calendar(
+        "노트",
+        R.drawable.btn_blue_bottom_bar_calendar,
+        R.drawable.btn_gray_bottom_bar_calendar
+    ),
 }
 
 @Composable

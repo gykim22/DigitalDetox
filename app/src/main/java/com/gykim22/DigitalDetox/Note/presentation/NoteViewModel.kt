@@ -159,7 +159,8 @@ class NoteViewModel @Inject constructor(
                                 title = noteTitle.value.text,
                                 contents = noteContent.value.text,
                                 category = "공부",
-                                timestamp = currentNoteId?.let { timestamp } ?: System.currentTimeMillis(),
+                                timestamp = currentNoteId?.let { timestamp }
+                                    ?: System.currentTimeMillis(),
                                 total_time = totalTime,
                                 study_time = studyTime,
                                 break_time = breakTime,
