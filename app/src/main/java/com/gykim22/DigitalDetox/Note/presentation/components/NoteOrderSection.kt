@@ -30,57 +30,42 @@ fun NoteOrderSection(
         WidthSpacer(sidePaddingValueInt.dp)
         SortChip(
             tagTitle = "제목",
-            isSelected = currentOrder is NoteOrder.Title,
             selected = currentOrder.orderType,
-            onSelected = {
-                onOrderChange(NoteOrder.Title(currentOrder.orderType))
-            },
-            modifier = Modifier
+            onSelected = { selectedType ->
+                onOrderChange(NoteOrder.Title(selectedType))
+            }
         )
+
         SortChip(
             tagTitle = "작성 일자",
-            isSelected = currentOrder is NoteOrder.Timestamp,
             selected = currentOrder.orderType,
-            onSelected = {
-                onOrderChange(NoteOrder.Timestamp(currentOrder.orderType))
-            },
-            modifier = Modifier
+            onSelected = { selectedType ->
+                onOrderChange(NoteOrder.Timestamp(selectedType))
+            }
         )
-        SortChip(
-            tagTitle = "카테고리",
-            isSelected = currentOrder is NoteOrder.Category,
-            selected = currentOrder.orderType,
-            onSelected = {
-                onOrderChange(NoteOrder.Category(currentOrder.orderType))
-            },
-            modifier = Modifier
-        )
+
         SortChip(
             tagTitle = "전체 시간",
-            isSelected = currentOrder is NoteOrder.TotalTime,
             selected = currentOrder.orderType,
-            onSelected = {
-                onOrderChange(NoteOrder.TotalTime(currentOrder.orderType))
-            },
-            modifier = Modifier
+            onSelected = { selectedType ->
+                onOrderChange(NoteOrder.TotalTime(selectedType))
+            }
         )
+
         SortChip(
             tagTitle = "공부 시간",
-            isSelected = currentOrder is NoteOrder.StudyTime,
             selected = currentOrder.orderType,
-            onSelected = {
-                onOrderChange(NoteOrder.StudyTime(currentOrder.orderType))
-            },
-            modifier = Modifier
+            onSelected = { selectedType ->
+                onOrderChange(NoteOrder.StudyTime(selectedType))
+            }
         )
+
         SortChip(
             tagTitle = "휴식 시간",
-            isSelected = currentOrder is NoteOrder.BreakTime,
             selected = currentOrder.orderType,
-            onSelected = {
-                onOrderChange(NoteOrder.BreakTime(currentOrder.orderType))
-            },
-            modifier = Modifier
+            onSelected = { selectedType ->
+                onOrderChange(NoteOrder.BreakTime(selectedType))
+            }
         )
         WidthSpacer(sidePaddingValueInt.dp)
     }
