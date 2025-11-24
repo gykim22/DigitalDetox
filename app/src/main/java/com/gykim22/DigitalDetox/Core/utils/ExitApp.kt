@@ -10,6 +10,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 
+/**
+ * 뒤로가기 버튼을 2번 누르면 앱이 종료되도록 하는 핸들러입니다.
+ * @author Kim Giyun
+ */
 @Composable
 fun HandleBackPressToExitApp() {
     val context = LocalContext.current

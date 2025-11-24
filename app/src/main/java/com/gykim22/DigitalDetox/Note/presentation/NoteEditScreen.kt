@@ -41,6 +41,15 @@ import com.gykim22.DigitalDetox.ui.theme.pretendard
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
+/**
+ * 노트 작성/수정 화면입니다.
+ * @param titleState 노트 제목 상태입니다. 제목 문자열과 작성 여부를 갖고 있습니다.
+ * @param contentState 노트 내용 상태입니다. 내용 문자열과 작성 여부를 갖고 있습니다.
+ * @param onEvent 노트 이벤트를 처리하는 람다입니다.
+ * @param eventFlow 노트 이벤트 플로우입니다.
+ * @param navController 네비게이션 컨트롤러입니다.
+ * @author Kim Giyun
+ */
 @Composable
 fun NoteEditScreen(
     titleState: NoteTextFieldState,
@@ -56,6 +65,11 @@ fun NoteEditScreen(
     var showExitDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
+    /**
+     * 이벤트 플로우를 수집합니다.
+     * 노트 저장 시 토스트 메시지를 띄우고 노트 리스트 화면으로 이동합니다.
+     * @author Kim Giyun
+     */
     LaunchedEffect(key1 = true) {
         eventFlow.collect { event ->
             when (event) {
@@ -73,6 +87,11 @@ fun NoteEditScreen(
             }
         }
     }
+
+    /**
+     * 뒤로가기 버튼을 눌렀을 때 경고 다이얼로그를 띄웁니다.
+     * @author Kim Giyun
+     */
     BackHandler {
         showExitDialog = true
     }
@@ -107,6 +126,11 @@ fun NoteEditScreen(
             containerColor = Color.White,
             titleContentColor = Color.Black,
             textContentColor = Color.Black,
+
+            /**
+             * 확인 버튼을 눌렀을 때 내용을 초기화하고 노트 리스트 화면으로 이동합니다.
+             * @author Kim Giyun
+             */
             confirmButton = {
                 TextButton(onClick = {
                     showExitDialog = false
@@ -122,6 +146,11 @@ fun NoteEditScreen(
                     )
                 }
             },
+
+            /**
+             * 취소 버튼을 눌렀을 때 다이얼로그를 닫습니다.
+             * @author Kim Giyun
+             */
             dismissButton = {
                 TextButton(onClick = { showExitDialog = false }) {
                     Text(
@@ -142,11 +171,14 @@ fun NoteEditScreen(
             .background(Color.White)
             .padding(16.dp)
     ) {
+
+        /* 노트 제목 */
         HintTextField(
             text = title,
             hint = titleState.hint,
             modifier = Modifier.fillMaxWidth(),
             onValueChange = {
+                /* 노트 제목을 30자 이하로 제한합니다 */
                 if (it.length <= 30) onEvent(AddEditNoteEvent.EnteredTitle(it))
             },
             onFocusChange = {
@@ -161,7 +193,10 @@ fun NoteEditScreen(
                 color = if (isTitleHintVisible) Color.Gray else Color.Black
             )
         )
+
         HeightSpacer(10.dp)
+
+        /* 노트 내용 */
         HintTextField(
             text = content,
             hint = contentState.hint,
@@ -169,6 +204,7 @@ fun NoteEditScreen(
                 .fillMaxWidth()
                 .weight(1f),
             onValueChange = {
+                /* 노트 내용을 1000자 이하로 제한합니다. */
                 if (it.length <= 1000) onEvent(AddEditNoteEvent.EnteredContent(it))
             },
             onFocusChange = {
@@ -182,7 +218,9 @@ fun NoteEditScreen(
                 color = if (isContentHintVisible) Color.Gray else Color.Black
             )
         )
+
         HeightSpacer(10.dp)
+
         CustomButton(
             text = "저장",
             textColor = Color.White,
@@ -197,6 +235,12 @@ fun NoteEditScreen(
     }
 }
 
+/**
+ * 노트 작성/수정 Root 화면입니다.
+ * ViewModel을 직접 주입하지 않기 위함입니다
+ * @param viewModel 노트 뷰모델입니다.
+ * @author Kim Giyun
+ */
 @Composable
 fun NoteEditRoot(
     viewModel: NoteViewModel,

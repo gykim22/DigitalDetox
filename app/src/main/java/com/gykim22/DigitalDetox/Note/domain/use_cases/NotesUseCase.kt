@@ -14,6 +14,11 @@ data class NoteUseCases(
     val getNote: GetNoteUseCase
 )
 
+/**
+ * 모든 노트를 가져오는 UseCase입니다.
+ * @property repository 노트 레포지토리입니다.
+ * @author Kim Giyun
+ */
 class GetAllNotesUseCase(
     private val repository: NoteRepository
 ) {
@@ -21,6 +26,11 @@ class GetAllNotesUseCase(
         noteOrder: NoteOrder = NoteOrder.Timestamp(OrderType.Descending)
     ): Flow<List<Note>> {
         return repository.getAllNotes().map { notes ->
+            /**
+             * 노트의 정렬 기준에 따라 정렬합니다.
+             * @param noteOrder 노트의 정렬 기준입니다.
+             * @return 정렬된 노트 리스트입니다.
+             */
             when (noteOrder.orderType) {
                 is OrderType.Ascending -> {
                     when (noteOrder) {
@@ -48,6 +58,10 @@ class GetAllNotesUseCase(
     }
 }
 
+/**
+ * 노트를 삭제하는 UseCase입니다.
+ * @author Kim Giyun
+ */
 class DeleteNoteUseCase(
     private val repository: NoteRepository
 ) {
@@ -56,6 +70,10 @@ class DeleteNoteUseCase(
     }
 }
 
+/**
+ * 노트를 추가하는 UseCase입니다.
+ * @author Kim Giyun
+ */
 class AddNoteUseCase(
     private val repository: NoteRepository
 ) {
@@ -72,6 +90,10 @@ class AddNoteUseCase(
     }
 }
 
+/**
+ * id를 활용해 노트를 가져오는 UseCase입니다.
+ * @author Kim Giyun
+ */
 class GetNoteUseCase(
     private val repository: NoteRepository
 ) {
