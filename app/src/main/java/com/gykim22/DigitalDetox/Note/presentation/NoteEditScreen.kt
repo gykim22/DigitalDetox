@@ -144,8 +144,6 @@ fun NoteEditScreen(
             .fillMaxSize()
             .background(Color.White)
             .padding(16.dp)
-            .navigationBarsPadding()
-            .statusBarsPadding()
     ) {
         HintTextField(
             text = title,

@@ -37,8 +37,6 @@ fun NoteListScreen(
             .fillMaxSize()
             .background(Color.White)
             .padding(vertical = 16.dp)
-            .navigationBarsPadding()
-            .statusBarsPadding()
     ) {
         NoteOrderSection(
             currentOrder = noteState.noteOrder,
