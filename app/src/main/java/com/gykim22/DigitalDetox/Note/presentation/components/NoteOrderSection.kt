@@ -14,6 +14,10 @@ import com.gykim22.DigitalDetox.Note.domain.util.NoteOrder
 import com.gykim22.DigitalDetox.Note.domain.util.OrderType
 import com.gykim22.DigitalDetox.Timer.presentation.util.WidthSpacer
 
+/**
+ * 노트 정렬 기준 UI입니다.
+ * @author Kim Giyun
+ */
 @Composable
 fun NoteOrderSection(
     sidePaddingValueInt : Int = 16,
