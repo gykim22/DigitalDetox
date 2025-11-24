@@ -58,7 +58,7 @@ fun CustomButton(
     buttonColor: Color = Color(0xFF397CDB),
     textColor: Color = Color.Black,
     textSize: Int = 18,
-    shape : Int = 16,
+    shape: Int = 16,
     enabled: Boolean = true,
     onClick: () -> Unit
 ) {

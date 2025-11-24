@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -13,6 +14,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuItemColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,7 +31,6 @@ import com.gykim22.DigitalDetox.ui.theme.blue100
 @Composable
 fun SortChip(
     tagTitle: String,
-    isSelected: Boolean,
     selected: OrderType,
     onSelected: (OrderType) -> Unit,
     modifier: Modifier = Modifier
@@ -62,44 +63,65 @@ fun SortChip(
         shape = MaterialTheme.shapes.large,
         modifier = modifier
     )
-
-    DropdownMenu(
-        expanded = expanded,
-        onDismissRequest = { expanded = false }
+    MaterialTheme(
+        colorScheme = MaterialTheme.colorScheme.copy(surface = Color.White),
+        shapes = MaterialTheme.shapes.copy(medium = RoundedCornerShape(10))
     ) {
-        DropdownMenuItem(
-            text = {
-                Row {
-                    Icon(
-                        Icons.Default.KeyboardArrowUp,
-                        contentDescription = null,
-                        tint = Color.Black
-                    )
-                    Text("  오름차순")
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                colors = MenuItemColors(
+                    textColor = Color.Black,
+                    leadingIconColor = Color.Transparent,
+                    trailingIconColor = Color.Transparent,
+                    disabledLeadingIconColor = Color.Transparent,
+                    disabledTrailingIconColor = Color.Black,
+                    disabledTextColor = Color.Black
+                ),
+                modifier = Modifier.background(Color.White),
+                text = {
+                    Row {
+                        Icon(
+                            Icons.Default.KeyboardArrowUp,
+                            contentDescription = null,
+                            tint = Color.Black
+                        )
+                        Text("  오름차순")
+                    }
+                },
+                onClick = {
+                    onSelected(OrderType.Ascending)
+                    expanded = false
+                },
+            )
+            DropdownMenuItem(
+                modifier = Modifier.background(Color.White),
+                colors = MenuItemColors(
+                    textColor = Color.Black,
+                    leadingIconColor = Color.Transparent,
+                    trailingIconColor = Color.Transparent,
+                    disabledLeadingIconColor = Color.Transparent,
+                    disabledTrailingIconColor = Color.Black,
+                    disabledTextColor = Color.Black
+                ),
+                text = {
+                    Row {
+                        Icon(
+                            Icons.Default.KeyboardArrowDown,
+                            contentDescription = null,
+                            tint = Color.Black
+                        )
+                        Text("  내림차순")
+                    }
+                },
+                onClick = {
+                    onSelected(OrderType.Descending)
+                    expanded = false
                 }
-            },
-            onClick = {
-                onSelected(OrderType.Ascending)
-                expanded = false
-            },
-            modifier = Modifier.background(Color.White)
-        )
-        DropdownMenuItem(
-            text = {
-                Row {
-                    Icon(
-                        Icons.Default.KeyboardArrowDown,
-                        contentDescription = null,
-                        tint = Color.Black
-                    )
-                    Text("  내림차순")
-                }
-            },
-            onClick = {
-                onSelected(OrderType.Descending)
-                expanded = false
-            }
-        )
+            )
+        }
     }
 }
 
@@ -110,7 +132,6 @@ private fun SortDropdownPreview() {
     SortChip(
         tagTitle = "작성 일자",
         selected = order,
-        isSelected = true,
         onSelected = { order = it },
         modifier = Modifier.padding(16.dp)
     )

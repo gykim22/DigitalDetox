@@ -1,8 +1,6 @@
 package com.gykim22.DigitalDetox.Timer.presentation.util
 
-import android.util.Log.i
 import java.util.concurrent.TimeUnit
-import kotlin.time.Duration.Companion.hours
 
 /**
  * 공부시간과 휴식시간을 합쳐 18시간 이상인 지 체크하는 함수입니다.
@@ -39,9 +37,11 @@ fun parseToSecond(formattedString: String): Int {
         2 -> {
             str[0].toInt() * 60 + str[1].toInt()
         }
+
         3 -> {
             str[0].toInt() * 3600 + str[1].toInt() * 60 + str[2].toInt()
         }
+
         else -> throw IllegalArgumentException("잘못된 양식입니다.")
     }
 }

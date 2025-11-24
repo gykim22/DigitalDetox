@@ -46,3 +46,7 @@ val pretendard = FontFamily(
     Font(R.font.pretendard_semibold, FontWeight.SemiBold),
     Font(R.font.pretendard_thin, FontWeight.Thin),
 )
+
+val satoshi = FontFamily(
+    Font(R.font.satoshi_medium, FontWeight.Medium),
+)

@@ -10,7 +10,6 @@ import com.gykim22.DigitalDetox.Timer.domain.use_cases.TimerUseCases
 import com.gykim22.DigitalDetox.di.PrimaryTimer
 import com.gykim22.DigitalDetox.di.SubTimer
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +17,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.concurrent.timer
 
 /**
  * 주 타이머와, 보조 타이머를 정의합니다.
@@ -52,16 +50,18 @@ class TimerViewModel @Inject constructor(
     @PrimaryTimer private val primaryTimerRepository: TimerRepository,
     @SubTimer private val subTimerRepository: TimerRepository
 ) : ViewModel() {
-    private val _timerState = MutableStateFlow(TimerList(
-        primaryTimer = Timer(
-            timerSecond = 0,
-            status = TimerStatus.STOPPED
-        ),
-        subTimer = Timer(
-            timerSecond = 0,
-            status = TimerStatus.STOPPED
+    private val _timerState = MutableStateFlow(
+        TimerList(
+            primaryTimer = Timer(
+                timerSecond = 0,
+                status = TimerStatus.STOPPED
+            ),
+            subTimer = Timer(
+                timerSecond = 0,
+                status = TimerStatus.STOPPED
+            )
         )
-    ))
+    )
     val timerState: StateFlow<TimerList> = _timerState.asStateFlow()
 
     private val _uiEvent = MutableSharedFlow<TimerUiEvent>()
@@ -118,6 +118,7 @@ class TimerViewModel @Inject constructor(
                 pausePrimaryTimer()
                 startSubTimer()
             }
+
             TimerStatus.PAUSED, TimerStatus.STOPPED -> {
                 startPrimaryTimer()
                 pauseSubTimer()
@@ -157,7 +158,7 @@ class TimerViewModel @Inject constructor(
      * 앱이 백그라운드에 진입할 시 타이머를 제어하는 함수입니다.
      */
     fun onApplicationBackgroundTimer() {
-        when(_timerState.value.primaryTimer.status) {
+        when (_timerState.value.primaryTimer.status) {
             TimerStatus.RUNNING -> {
                 startSubTimer()
                 pausePrimaryTimer()
@@ -171,12 +172,13 @@ class TimerViewModel @Inject constructor(
      * 앱이 포어그라운드에 진입할 시 타이머를 제어하는 함수입니다.
      */
     fun onApplicationForegroundTimer() {
-        when(_timerState.value.primaryTimer.status) {
+        when (_timerState.value.primaryTimer.status) {
             TimerStatus.PAUSED -> {
                 pauseSubTimer()
                 startPrimaryTimer()
             }
-            TimerStatus.RUNNING, TimerStatus.STOPPED -> { }
+
+            TimerStatus.RUNNING, TimerStatus.STOPPED -> {}
         }
     }
 
