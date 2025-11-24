@@ -38,6 +38,10 @@ import com.gykim22.DigitalDetox.Timer.presentation.util.parseToHMS
 import com.gykim22.DigitalDetox.ui.theme.blue100
 import com.gykim22.DigitalDetox.ui.theme.pretendard
 
+/**
+ * 노트 UI입니다.
+ * @author Kim Giyun
+ */
 @Composable
 fun NoteItem(
     note: Note,
@@ -63,6 +67,7 @@ fun NoteItem(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            /* 노트 제목 */
             Text(
                 text = note.title,
                 modifier = Modifier.weight(1f),
@@ -75,6 +80,7 @@ fun NoteItem(
 
             WidthSpacer(5.dp)
 
+            /* 삭제 아이콘 */
             Icon(
                 imageVector = Icons.Default.Delete,
                 contentDescription = "삭제",
@@ -83,6 +89,8 @@ fun NoteItem(
             )
         }
         HeightSpacer(10.dp)
+
+        /* 생성 일자 */
         Text(
             text = dateFormat(note.timestamp),
             modifier = Modifier,
@@ -105,6 +113,7 @@ fun NoteItem(
                 color = Color.Black,
                 fontSize = 16.sp,
             )
+            /* 아이콘 클릭 시 아래로 확장되며 공부/휴식 시간이 나타납니다. */
             Icon(
                 imageVector = Icons.Default.KeyboardArrowDown,
                 contentDescription = "더보기",
@@ -137,6 +146,7 @@ fun NoteItem(
 
         HeightSpacer(10.dp)
 
+        /* 노트 내용 */
         Text(
             text = note.contents,
             modifier = Modifier,
