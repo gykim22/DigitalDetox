@@ -23,6 +23,10 @@ import com.gykim22.DigitalDetox.Note.presentation.components.NoteItem
 import com.gykim22.DigitalDetox.Note.presentation.components.NoteOrderSection
 import com.gykim22.DigitalDetox.Timer.presentation.util.HeightSpacer
 
+/**
+ * 노트 리스트 화면입니다.
+ * @author Kim Giyun
+ */
 @Composable
 fun NoteListScreen(
     noteState: NoteState,
@@ -65,6 +69,12 @@ fun NoteListScreen(
     }
 }
 
+/**
+ * 노트 리스트 Root 화면입니다.
+ * ViewModel을 직접 주입하지 않기 위함입니다
+ * @param viewModel 노트 뷰모델입니다.
+ * @author Kim Giyun
+ */
 @Composable
 fun NoteListRoot(
     viewModel: NoteViewModel,
