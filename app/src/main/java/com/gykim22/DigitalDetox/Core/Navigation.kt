@@ -1,10 +1,24 @@
 package com.gykim22.DigitalDetox.Core
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavGraph
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -18,7 +32,9 @@ import com.gykim22.DigitalDetox.Note.presentation.NoteListRoot
 import com.gykim22.DigitalDetox.Note.presentation.NoteViewModel
 import com.gykim22.DigitalDetox.Timer.presentation.TimerRoot
 import com.gykim22.DigitalDetox.Timer.presentation.TimerViewModel
+import com.gykim22.DigitalDetox.ui.theme.satoshi
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainGraph() {
     val navController = rememberNavController()
@@ -26,7 +42,7 @@ fun MainGraph() {
         .collectAsState(initial = navController.currentBackStackEntry)
         .value?.destination?.route
 
-    val shouldShowBottomBar = when {
+    val shouldShowAppBar = when {
         currentRoute == Screen.NoteEditScreen.route -> false
         currentRoute?.startsWith("add_edit_note") == true -> false
         else -> true
@@ -40,7 +56,7 @@ fun MainGraph() {
 
     Scaffold(
         bottomBar = {
-            if (shouldShowBottomBar) {
+            if (shouldShowAppBar) {
                 BottomBar(
                     selectedTab = selectedTab,
                     onTabSelected = { tab ->
@@ -62,12 +78,37 @@ fun MainGraph() {
                     }
                 )
             }
-        }
+        },
+        topBar = {
+            if (shouldShowAppBar) {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = "Digital Detox",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontFamily = satoshi,
+                            fontWeight = FontWeight.Medium
+                        )
+                    },
+                    colors = TopAppBarColors(
+                        Color.White,
+                        scrolledContainerColor = Color.White,
+                        navigationIconContentColor = Color.White,
+                        titleContentColor = Color.Black,
+                        actionIconContentColor = Color.White,
+                    )
+                )
+            }
+        },
     ) {
-        NavGraph(
-            startDestination = Screen.TimerScreen.route,
-            navController = navController
-        )
+        Column(
+            modifier = Modifier.padding(it)
+        ) {
+            NavGraph(
+                startDestination = Screen.TimerScreen.route,
+                navController = navController
+            )
+        }
     }
 }
 
@@ -82,7 +123,9 @@ fun NavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = startDestination
+        startDestination = startDestination,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None }
     ) {
         composable(Screen.NoteListScreen.route) {
             NoteListRoot(noteViewModel, navController)
