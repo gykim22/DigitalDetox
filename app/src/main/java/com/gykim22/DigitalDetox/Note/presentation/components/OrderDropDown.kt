@@ -28,6 +28,10 @@ import androidx.compose.ui.unit.dp
 import com.gykim22.DigitalDetox.Note.domain.util.OrderType
 import com.gykim22.DigitalDetox.ui.theme.blue100
 
+/**
+ * 노트 정렬용 DropDown 버튼입니다.
+ * @author Kim Giyun
+ */
 @Composable
 fun SortChip(
     tagTitle: String,
